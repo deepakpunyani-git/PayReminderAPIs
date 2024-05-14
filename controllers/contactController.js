@@ -9,10 +9,7 @@ exports.addMessage = async (req, res) => {
   }
 
   try {
-    // Check if message limit exceeded for email or IP address
-    // Your logic to check message limit goes here...
-
-    // Create new message
+ 
     const { name, email, message } = req.body;
     const newMessage = new PayReminderContactus({
       name,
@@ -54,7 +51,6 @@ exports.changeStatus = async (req, res) => {
   try {
     const { messageId, status } = req.body;
 
-    // Check if status can be changed (from pending to read)
     if (status === 'read') {
       const message = await PayReminderContactus.findById(messageId);
       if (!message) {

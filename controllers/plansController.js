@@ -73,7 +73,8 @@ exports.listPayReminderPlans = async (req, res) => {
     let query = PayReminderPlan.find();
 
     // Sorting
-    const { sortBy, sortOrder } = req.query;
+    const { sortOrder } = req.query;
+    const sortBy = "name";
     if (sortBy && sortOrder) {
       const sortOption = {};
       sortOption[sortBy] = sortOrder === 'asc' ? 1 : -1;
@@ -87,4 +88,3 @@ exports.listPayReminderPlans = async (req, res) => {
   }
 };
 
-// Validators are similar to the booking or staff validators and can be implemented accordingly.

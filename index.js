@@ -8,6 +8,8 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./models/userModel');
 const { generateToken } = require('./helpers');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
 
 // Load environment variables
 dotenv.config();
@@ -71,10 +73,48 @@ passport.deserializeUser(async function(id, done) {
   }
 });
 
+// Swagger setup
+const options = {
+  definition: {
+    "openapi": "3.0.3",
+    "info": {
+        "description": "NodeJS API documentation of SSV",
+        "version": "1.0.0",
+        "title": "SSV APIs"
+    },
+    "security": [
+        {
+            "BearerAuth": []
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "name": "Authorization",
+                "in": "header",
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Enter your bearer token in the format Bearer <token>"
+            }
+        }
+    }
+}
+,
+apis: ["./swagger/*.js"],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+// Swagger documentation route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
 
 // Routes
 app.get("/", (req, res) => {
-  res.send('Homepage APIs');
+  res.send('Demo APIs - Pay Reminder. <a href="/api-docs/">Test APIs here</a>.');
+
 });
 
 
