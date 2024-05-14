@@ -20,16 +20,16 @@ const verifyToken = (req, res, next) => {
 
 };
 
-const checkUserType = (allowedUserType) => {
-    return (req, res, next) => {
-      const user = req.user;
-      if (user && user.usertype === allowedUserType) {
-        next();
-      } else {
-        res.status(403).json({ success: false, message: 'Permission denied.' });
-      } 
-    };
+const checkUserType = (allowedUserTypes) => {
+  return (req, res, next) => {
+    const user = req.user;
+    if (user && allowedUserTypes.includes(user.usertype)) {
+      next();
+    } else {
+      res.status(403).json({ success: false, message: 'Permission denied.' });
+    } 
   };
+};
     
 
 module.exports = {verifyToken,checkUserType};

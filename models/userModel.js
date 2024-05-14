@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const bcrypt = require('bcrypt');
 
 const PayReminderUserSchema = new Schema({
   name: { type: String, required: true },
+  age: { type: Number }, 
+  gender: { type: String, enum: ['male', 'female', 'other'] },
+  profile_pic: { type: String } ,
   username: String,
   email: { type: String, required: true },
+  email_otp: { type: Number},
+  email_otp_dateCreated: { type: Date},
+  email_otp_expiresAt: { type: Date},
   password: String, 
   googleId: String,
   status: { type: String, enum: ['active', 'inactive'] , default: 'active' }, 
@@ -15,5 +22,12 @@ const PayReminderUserSchema = new Schema({
   updatedBy: { type: Schema.Types.ObjectId, ref: 'EventFlow-users' }
 });
 
+PayReminderUserSchema.methods.comparePassword = async function (candidatePassword) {
+  try {
+      return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+      throw new Error(error);
+  }
+};
 
 module.exports = mongoose.model('PayReminderUser', PayReminderUserSchema);
