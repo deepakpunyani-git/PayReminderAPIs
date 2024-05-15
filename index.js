@@ -120,18 +120,48 @@ app.get("/", (req, res) => {
 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: `${CLIENT_URL}/login` }),
-  async (req, res) => {
-    try {
-      const token = generateToken(req.user);
-      const redirectUrl = `${CLIENT_URL}/login?token=${token}`;
-      res.redirect(redirectUrl);
-    } catch (error) {
-      console.error(error);
-      res.redirect(`${CLIENT_URL}/login`);
+// app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: `${CLIENT_URL}/login` }),
+//   async (req, res) => {
+//     try {
+//       const token = generateToken(req.user);
+//       const redirectUrl = `${CLIENT_URL}/login?token=${token}`;
+//       res.redirect(redirectUrl);
+//     } catch (error) {
+//       console.error(error);
+//       res.redirect(`${CLIENT_URL}/login`);
+//     }
+//   }
+// );
+
+app.get('/auth/google/callback', (req, res, next) => {
+  console.log('Received redirect URI:', req.originalUrl);
+  
+  passport.authenticate('google', (err, user, info) => {
+    if (err) {
+      console.error('Error during Google OAuth authentication:', err);
+      // Redirect to an error page or handle the error as needed
+      return res.redirect('/error');
     }
-  }
-);
+    if (!user) {
+      console.error('Google OAuth authentication failed:', info.message);
+      // Redirect to a login page or handle the authentication failure as needed
+      return res.redirect('/login');
+    }
+    // If authentication is successful, log the user in and generate a token
+    req.login(user, (err) => {
+      if (err) {
+        console.error('Error during login:', err);
+        // Redirect to an error page or handle the error as needed
+        return res.redirect('/error');
+      }
+      // Generate a token or perform any additional actions
+      const token = generateToken(user);
+      console.log('User logged in successfully:', user);
+      // Redirect to the authenticated page with the token
+      res.redirect(`/authenticated?token=${token}`);
+    });
+  })(req, res, next);
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
