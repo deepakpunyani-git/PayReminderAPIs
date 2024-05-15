@@ -2,14 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const contactController = require('../controllers/contactController');
-const { addMessageValidator, changeStatusValidator } = require('../validators/contactValidator');
-const { validateRequest } = require('../middleware/validation');
-const authMiddleware = require('../middleware/authMiddleware');
+const { addMessageValidator, changeStatusValidator , validateListMessages  } = require('../validators/contactValidator');
+const {verifyToken,checkUserType} = require('../middleware/authMiddleware'); 
 
-router.post('/messages', authMiddleware, addMessageValidator, validateRequest, contactController.addMessage);
+router.post('/contact-us/message', addMessageValidator, contactController.addMessage);
 
-router.get('/messages', authMiddleware, contactController.listMessages);
+router.get('/contact-us/message', verifyToken ,checkUserType(['admin', 'staff']), validateListMessages ,  contactController.listMessages);
 
-router.put('/messages/:messageId/status', authMiddleware, changeStatusValidator, validateRequest, contactController.changeStatus);
+router.put('/contact-us/message/status/:messageId', verifyToken ,checkUserType(['admin', 'staff']), changeStatusValidator, contactController.changeStatus);
 
 module.exports = router;

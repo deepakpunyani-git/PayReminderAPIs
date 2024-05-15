@@ -28,7 +28,47 @@
  *         description: Internal server error
  *   get:
  *     summary: List all messages
- *     tags: [Contact Us]
+ *     tags: 
+ *       - Contact Us
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items to return per page
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         description: Filter messages by status
+ *       - in: query
+ *         name: fromDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter messages created from this date (YYYY-MM-DD)
+ *       - in: query
+ *         name: toDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter messages created up to this date (YYYY-MM-DD)
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *         description: Field to sort by (status, datecreated, etc.)
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *         description: Sort order (ascending or descending)
  *     responses:
  *       '200':
  *         description: List of messages
@@ -44,7 +84,7 @@
 
 /**
  * @swagger
- * /contact-us/message/status:
+ * /contact-us/message/status/{id}:
  *   put:
  *     summary: Change message status
  *     tags: [Contact Us]
@@ -57,8 +97,6 @@
  *           schema:
  *             type: object
  *             properties:
- *               messageId:
- *                 type: string
  *               status:
  *                 type: string
  *                 enum: [read, pending]
@@ -85,11 +123,6 @@
  *         email:
  *           type: string
  *         message:
- *           type: string
- *         datecreated:
- *           type: string
- *           format: date-time
- *         send_by:
  *           type: string
  *         status:
  *           type: string

@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body , query} = require('express-validator');
 
 exports.addMessageValidator = [
   body('name').notEmpty().withMessage('Name is required'),
@@ -7,6 +7,15 @@ exports.addMessageValidator = [
 ];
 
 exports.changeStatusValidator = [
-  body('messageId').notEmpty().withMessage('Message ID is required').isMongoId().withMessage('Invalid message ID'),
   body('status').custom(value => ['pending', 'read'].includes(value)).withMessage('Invalid status')
+];
+
+exports.validateListMessages = [
+  query('page').optional().isInt().toInt(),
+  query('limit').optional().isInt().toInt(),
+  query('status').optional().isString(),
+  query('fromDate').optional().isISO8601().toDate(),
+  query('toDate').optional().isISO8601().toDate(),
+  query('sortBy').optional().isString(),
+  query('sortOrder').optional().isIn(['asc', 'desc'])
 ];

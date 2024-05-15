@@ -2,7 +2,6 @@ const PayReminderContactus = require('../models/PayReminderContactus');
 const { validationResult } = require('express-validator');
 
 exports.addMessage = async (req, res) => {
-  // Validate input
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -11,12 +10,20 @@ exports.addMessage = async (req, res) => {
   try {
  
     const { name, email, message } = req.body;
+    var userId = req.user.id ? req.user.id : null;
+
+    const isLimitReached = await checkMessageLimit(email, req.ip);
+
+    if (isLimitReached) {
+        return res.status(400).json({ error: "Message limit reached for today." });
+    }
+
     const newMessage = new PayReminderContactus({
       name,
       email,
       message,
       datecreated: Date.now(),
-      send_by: req.user.id, // Assuming user ID is stored in req.user.id
+      send_by: userId,
       status: 'pending',
       ip_address: req.ip
     });
@@ -33,7 +40,33 @@ exports.addMessage = async (req, res) => {
 
 exports.listMessages = async (req, res) => {
   try {
-    const messages = await PayReminderContactus.find().sort({ datecreated: -1 });
+    // Pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skipIndex = (page - 1) * limit;
+
+    // Filter parameters
+    const { status, fromDate, toDate } = req.query;
+    const filter = {};
+    if (status) filter.status = status;
+    if (fromDate || toDate) {
+      filter.datecreated = {};
+      if (fromDate) filter.datecreated.$gte = new Date(fromDate);
+      if (toDate) filter.datecreated.$lte = new Date(toDate);
+    }
+
+    // Sorting parameter
+    const sortField = req.query.sortBy || 'status';
+    const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1;
+    const sort = { [sortField]: sortOrder };
+
+    // Fetch messages based on filters, sort, and pagination
+    const messages = await PayReminderContactus.find(filter)
+      .sort(sort)
+      .skip(skipIndex)
+      .limit(limit)
+      .lean(); 
+      
     res.json(messages);
   } catch (error) {
     console.error(error);
@@ -42,7 +75,6 @@ exports.listMessages = async (req, res) => {
 };
 
 exports.changeStatus = async (req, res) => {
-  // Validate input
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -70,3 +102,16 @@ exports.changeStatus = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+
+async function checkMessageLimit(email, ip) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); 
+
+  const messagesCount = await PayReminderContactus.countDocuments({
+      $or: [{ email }, { ip_address: ip }],
+      datecreated: { $gte: today }
+  });
+
+  return messagesCount >= 3;
+}
