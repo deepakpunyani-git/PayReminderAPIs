@@ -37,34 +37,34 @@ app.use(routes);
 passport.use(new GoogleStrategy({
   clientID: GOOGLE_CLIENT_ID,
   clientSecret: GOOGLE_CLIENT_SECRET,
-  callbackURL: "/auth/google/callback"
+  callbackURL: "https://payreminder.onrender.com/auth/google/callback"
 },
-async function(accessToken, refreshToken, profile, cb) {
-  try {
-    let user = await User.findOne({ email: profile.emails[0].value });
-    if (!user) {
-      user = new User({
-        name: profile.displayName,
-        email: profile.emails[0].value,
-        googleId: profile.id,
-      });
-      await user.save();
-    }else{
-      user.googleId = profile.id;
-      await user.save();
+  async function (accessToken, refreshToken, profile, cb) {
+    try {
+      let user = await User.findOne({ email: profile.emails[0].value });
+      if (!user) {
+        user = new User({
+          name: profile.displayName,
+          email: profile.emails[0].value,
+          googleId: profile.id,
+        });
+        await user.save();
+      } else {
+        user.googleId = profile.id;
+        await user.save();
+      }
+      return cb(null, user);
+    } catch (error) {
+      return cb(error);
     }
-    return cb(null, user);
-  } catch (error) {
-    return cb(error);
   }
-}
 ));
 
-passport.serializeUser(function(user, done) {
-done(null, user.id);
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
 });
 
-passport.deserializeUser(async function(id, done) {
+passport.deserializeUser(async function (id, done) {
   try {
     const user = await User.findById(id);
     done(null, user);
@@ -78,30 +78,30 @@ const options = {
   definition: {
     "openapi": "3.0.3",
     "info": {
-        "description": "NodeJS API documentation of SSV",
-        "version": "1.0.0",
-        "title": "SSV APIs"
+      "description": "NodeJS API documentation of SSV",
+      "version": "1.0.0",
+      "title": "SSV APIs"
     },
     "security": [
-        {
-            "BearerAuth": []
-        }
+      {
+        "BearerAuth": []
+      }
     ],
     "components": {
-        "securitySchemes": {
-            "BearerAuth": {
-                "name": "Authorization",
-                "in": "header",
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT",
-                "description": "Enter your bearer token in the format Bearer <token>"
-            }
+      "securitySchemes": {
+        "BearerAuth": {
+          "name": "Authorization",
+          "in": "header",
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT",
+          "description": "Enter your bearer token in the format Bearer <token>"
         }
+      }
     }
-}
-,
-apis: ["./swagger/*.js"],
+  }
+  ,
+  apis: ["./swagger/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
@@ -118,9 +118,9 @@ app.get("/", (req, res) => {
 });
 
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('https://payreminder.onrender.com/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: `${CLIENT_URL}/login` }),
+app.get('https://payreminder.onrender.com/auth/google/callback', passport.authenticate('google', { failureRedirect: `${CLIENT_URL}/login` }),
   async (req, res) => {
     try {
       const token = generateToken(req.user);
@@ -147,7 +147,7 @@ app.use((req, res) => {
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+      console.log(`Server is running on port ${PORT}`);
     });
   })
   .catch((err) => {

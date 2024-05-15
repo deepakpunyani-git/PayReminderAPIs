@@ -226,27 +226,22 @@ exports.updatePassword = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  // Extract current password and new password from request body
   const { currentPassword, newPassword } = req.body;
 
   try {
-    // Find the user by ID
     const user = await User.findById(req.userId);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Validate current password
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: 'Invalid current password' });
     }
 
-    // Hash the new password
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    // Update the user's password
     user.password = hashedPassword;
 
     // Save the updated user
@@ -359,7 +354,6 @@ exports.verifyOtp = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 
 
 const generateOTP = () => {

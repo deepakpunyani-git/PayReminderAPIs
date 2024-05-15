@@ -18,8 +18,8 @@ const PayReminderUserSchema = new Schema({
   usertype: { type: String,enum: ['admin', 'staff','client'], default: 'client' }, 
   dateCreated: { type: Date, default: Date.now },
   dateUpdated: Date, 
-  createdBy: { type: Schema.Types.ObjectId, ref: 'EventFlow-users' },
-  updatedBy: { type: Schema.Types.ObjectId, ref: 'EventFlow-users' }
+  createdBy: { type: Schema.Types.ObjectId, ref: 'PayReminderUser' },
+  updatedBy: { type: Schema.Types.ObjectId, ref: 'PayReminderUser' }
 });
 
 PayReminderUserSchema.methods.comparePassword = async function (candidatePassword) {

@@ -72,13 +72,19 @@ exports.listPayReminderPlans = async (req, res) => {
   try {
     let query = PayReminderPlan.find();
 
-    // Sorting
-    const { sortOrder } = req.query;
-    const sortBy = "name";
-    if (sortBy && sortOrder) {
-      const sortOption = {};
-      sortOption[sortBy] = sortOrder === 'asc' ? 1 : -1;
-      query = query.sort(sortOption);
+    if (req.user && req.user.userType) {
+
+      let userType = req.user.userType; 
+
+    }else{
+      let userType = ""; 
+
+    }
+
+    if (userType !== 'admin' && userType !== 'staff') {
+      query = query.select('-name -features -yearlyPrice -monthlyPrice');
+    } else {
+      query = query.populate('createdBy', 'username').populate('updatedBy', 'username');
     }
 
     const payReminderPlans = await query.exec();
@@ -88,3 +94,24 @@ exports.listPayReminderPlans = async (req, res) => {
   }
 };
 
+exports.listPayReminderPlans = async (req, res) => {
+  try {
+    let query = PayReminderPlan.find();
+    if (req.user && req.user.userType) {
+      const userType = req.user.userType;
+      if (userType !== 'admin' && userType !== 'staff') {
+        query = query.select('name features yearlyPrice monthlyPrice');
+      } else {
+        query = query.populate('createdBy', 'username').populate('updatedBy', 'username');
+      }
+    } else {
+      query = query.select('name features yearlyPrice monthlyPrice');
+
+    }
+
+    const payReminderPlans = await query.exec();
+    res.json(payReminderPlans);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};

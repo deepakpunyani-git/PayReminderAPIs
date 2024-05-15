@@ -1,6 +1,11 @@
 const Staff = require('../models/userModel');
 const { validationResult } = require('express-validator');
 
+const saltRounds = parseInt(process.env.saltRounds);
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+dotenv.config();
+
 // Add staff
 exports.addStaff = async (req, res) => {
     const errors = validationResult(req);
@@ -11,7 +16,6 @@ exports.addStaff = async (req, res) => {
     try {
     const { name, username, password } = req.body;
       
-      // Check if the username is already taken
       const existingStaff = await Staff.findOne({ username });
       if (existingStaff) {
         return res.status(400).json({ message: 'Username already exists' });
@@ -25,27 +29,6 @@ exports.addStaff = async (req, res) => {
     }
   };
   
-
-// Update staff
-exports.updateStaffName = async (req, res) => {
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    try {
-      const { id } = req.params;
-      const { name } = req.body;
-      const staff = await Staff.findByIdAndUpdate(id, { name, dateUpdated: Date.now() }, { new: true });
-      if (!staff) {
-        return res.status(404).send();
-      }
-      res.send(staff);
-    } catch (error) {
-      res.status(400).send(error);
-    }
-  };
 
 // Change password
 exports.changePassword = async (req, res) => {
@@ -63,7 +46,10 @@ exports.changePassword = async (req, res) => {
     if (!staff) {
       return res.status(404).send();
     }
-    staff.password = newPassword;
+
+    
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    staff.password = hashedPassword;
     await staff.save();
     res.send(staff);
   } catch (error) {
@@ -71,26 +57,6 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-// Update staff status
-exports.updateStatus = async (req, res) => { 
-       
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }        
-
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-    const staff = await Staff.findByIdAndUpdate(id, { status }, { new: true });
-    if (!staff) {
-      return res.status(404).send();
-    }
-    res.send(staff);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-};
 
 // Delete staff
 exports.deleteStaff = async (req, res) => {

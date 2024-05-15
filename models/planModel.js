@@ -6,9 +6,9 @@ const PayReminderPlanSchema = new Schema({
   features: { type: [String], required: true },
   yearlyPrice: { type: Number, required: true },
   monthlyPrice: { type: Number, required: true },
-  createdBy: { type: Schema.Types.ObjectId, ref: 'EventFlow-users' },
+  createdBy: { type: Schema.Types.ObjectId, ref: 'PayReminderUser' },
   dateCreated: { type: Date, default: Date.now },
-  updatedBy: { type: Schema.Types.ObjectId, ref: 'EventFlow-users' },
+  updatedBy: { type: Schema.Types.ObjectId, ref: 'PayReminderUser' },
   dateUpdated: { type: Date },
 });
 module.exports = mongoose.model('PayReminderPlan', PayReminderPlanSchema);
