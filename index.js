@@ -37,7 +37,7 @@ app.use(routes);
 passport.use(new GoogleStrategy({
   clientID: GOOGLE_CLIENT_ID,
   clientSecret: GOOGLE_CLIENT_SECRET,
-  callbackURL: "https://payreminder.onrender.com/auth/google/callback"
+  callbackURL: "/auth/google/callback"
 },
   async function (accessToken, refreshToken, profile, cb) {
     try {
@@ -118,9 +118,9 @@ app.get("/", (req, res) => {
 });
 
 
-app.get('https://payreminder.onrender.com/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('https://payreminder.onrender.com/auth/google/callback', passport.authenticate('google', { failureRedirect: `${CLIENT_URL}/login` }),
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: `${CLIENT_URL}/login` }),
   async (req, res) => {
     try {
       const token = generateToken(req.user);
