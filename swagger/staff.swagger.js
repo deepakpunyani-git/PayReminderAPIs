@@ -9,7 +9,7 @@
  * @swagger
  * /staff:
  *   get:
- *     summary: List all staff members 
+ *     summary: List all staff members
  *     tags: [Staff]
  *     security:
  *       - bearerAuth: []
@@ -110,4 +110,40 @@
  *         description: Unauthorized
  *       '404':
  *         description: Staff member not found
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Staff:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The unique identifier for the staff member
+ *         name:
+ *           type: string
+ *           description: The name of the staff member
+ *         username:
+ *           type: string
+ *           description: The username of the staff member
+ *     NewStaff:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The name of the new staff member
+ *         username:
+ *           type: string
+ *           description: The username of the new staff member
+ *         password:
+ *           type: string
+ *           description: The password of the new staff member
+ *     ChangePassword:
+ *       type: object
+ *       properties:
+ *         newPassword:
+ *           type: string
+ *           description: The new password for the staff member
  */

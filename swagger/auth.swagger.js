@@ -159,3 +159,15 @@
  *       '500':
  *         description: Internal server error
  */
+
+
+/**
+ * @swagger
+ * /auth/google/:
+ *   post:
+ *     summary: Google Auth
+ *     tags: [Authentication]
+ *     externalDocs:
+ *       description: Open in new tab
+ *       url: '/auth/google/'
+ */

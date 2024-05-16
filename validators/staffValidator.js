@@ -4,7 +4,6 @@ const addStaffValidator = [
   body('name', 'Name is required').notEmpty(),
   body('username', 'Username is required').notEmpty(),
   body('password', 'Password must be at least 8 characters long').isLength({ min: 8 }),
-  body('usertype').notEmpty().isIn(['admin', 'staff', 'client']).withMessage('Invalid user type')
 ];
 
 const changePasswordValidator = [
