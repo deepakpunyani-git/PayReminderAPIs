@@ -1,5 +1,8 @@
 const PayReminderContactus = require('../models/ContactusModel');
 const { validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const secretKey = process.env.JWT_SECRET;
 
 exports.addMessage = async (req, res) => {
   const errors = validationResult(req);
@@ -10,8 +13,14 @@ exports.addMessage = async (req, res) => {
   try {
  
     const { name, email, message } = req.body;
-    var userId = req.user && req.user._id ? req.user._id : null;
-
+    const token = req.headers.authorization?.split(' ')[1];
+    var userId;
+    if (token) {
+      jwt.verify(token, secretKey, (err, decoded) => {
+          userId = decoded?._id;
+          console.log(userId);
+      });
+    }
     const isLimitReached = await checkMessageLimit(email);
 
     if (isLimitReached) {
@@ -26,7 +35,6 @@ exports.addMessage = async (req, res) => {
       send_by: userId,
       status: 'pending',
     });
-
     // Save message
     await newMessage.save();
 

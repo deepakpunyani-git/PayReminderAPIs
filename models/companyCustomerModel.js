@@ -7,5 +7,4 @@ const PayReminderCompanyCustomerSchema = new Schema({
   dateCreated: { type: Date, default: Date.now },
   updatedBy: { type: Schema.Types.ObjectId, ref: 'EventFlow-users' },
   dateUpdated: { type: Date },
-  // Add other company customer schema fields here
 });
