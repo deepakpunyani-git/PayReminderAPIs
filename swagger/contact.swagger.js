@@ -11,8 +11,6 @@
  *   post:
  *     summary: Add a new message via contact form
  *     tags: [Contact Us]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -88,8 +86,6 @@
  *   put:
  *     summary: Change message status
  *     tags: [Contact Us]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -123,10 +119,5 @@
  *         email:
  *           type: string
  *         message:
- *           type: string
- *         status:
- *           type: string
- *           enum: [pending, read]
- *         ip_address:
  *           type: string
  */

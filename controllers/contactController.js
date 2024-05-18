@@ -1,4 +1,4 @@
-const PayReminderContactus = require('../models/PayReminderContactus');
+const PayReminderContactus = require('../models/ContactusModel');
 const { validationResult } = require('express-validator');
 
 exports.addMessage = async (req, res) => {
@@ -10,9 +10,9 @@ exports.addMessage = async (req, res) => {
   try {
  
     const { name, email, message } = req.body;
-    var userId = req.user.id ? req.user.id : null;
+    var userId = req.user && req.user._id ? req.user._id : null;
 
-    const isLimitReached = await checkMessageLimit(email, req.ip);
+    const isLimitReached = await checkMessageLimit(email);
 
     if (isLimitReached) {
         return res.status(400).json({ error: "Message limit reached for today." });
@@ -25,7 +25,6 @@ exports.addMessage = async (req, res) => {
       datecreated: Date.now(),
       send_by: userId,
       status: 'pending',
-      ip_address: req.ip
     });
 
     // Save message
@@ -104,12 +103,12 @@ exports.changeStatus = async (req, res) => {
 };
 
 
-async function checkMessageLimit(email, ip) {
+async function checkMessageLimit(email) {
   const today = new Date();
   today.setHours(0, 0, 0, 0); 
 
   const messagesCount = await PayReminderContactus.countDocuments({
-      $or: [{ email }, { ip_address: ip }],
+      $or: [{ email }],
       datecreated: { $gte: today }
   });
 

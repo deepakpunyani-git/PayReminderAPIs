@@ -11,8 +11,6 @@
  *   get:
  *     summary: List all staff members
  *     tags: [Staff]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: sortOrder
@@ -39,8 +37,6 @@
  *   post:
  *     summary: Create a new staff member
  *     tags: [Staff]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -62,8 +58,6 @@
  *   patch:
  *     summary: Change the password of an existing staff member by ID
  *     tags: [Staff]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -94,8 +88,6 @@
  *   delete:
  *     summary: Delete an existing staff member by ID
  *     tags: [Staff]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

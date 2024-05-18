@@ -16,4 +16,9 @@ const generateOTP = () => {
 };
 
 
-module.exports = { generateToken };
+const regNewUserData = () => {
+  return {total_email:50,total_sms:50,total_customers_in_company:100,total_companies:1,trail_taken:true,plan_type:'Free',plan_status:'Active'};
+};
+
+
+module.exports = { generateToken ,  generateOTP};

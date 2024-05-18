@@ -11,8 +11,6 @@
  *   post:
  *     summary: Add a new payment reminder plan (Access by only Admin)
  *     tags: [Plans]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -29,6 +27,14 @@
  *               yearlyPrice:
  *                 type: number
  *               monthlyPrice:
+ *                 type: number
+ *               total_companies:
+ *                 type: number
+ *               total_customers_in_company:
+ *                 type: number
+ *               total_sms:
+ *                 type: number
+ *               total_email:
  *                 type: number
  *     responses:
  *       '201':
@@ -51,8 +57,6 @@
  *   put:
  *     summary: Update an existing payment reminder plan by ID (Access by only Admin)
  *     tags: [Plans]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -83,8 +87,6 @@
  *   delete:
  *     summary: Delete a payment reminder plan by ID (Access by only Admin)
  *     tags: [Plans]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

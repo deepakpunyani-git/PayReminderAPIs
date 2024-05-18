@@ -10,11 +10,10 @@ const PayReminderPlanSchema = new Schema({
   dateCreated: { type: Date, default: Date.now },
   updatedBy: { type: Schema.Types.ObjectId, ref: 'PayReminderUser' },
   dateUpdated: { type: Date },
-  plan_id: { type: Schema.Types.ObjectId, ref: 'PayReminderPlan' },
-  planStartDate: { type: Date },
-  planEndDate: { type: Date },
-  plan_status: { type: String, enum: ['Active', 'Expired', 'Canceled']},
-  trail_taken: { type: Boolean, default: false },
-  plan_type: { type: String, enum: ['Free', 'Paid']},
+  total_companies: { type: Number, required: true }, // -1 unlimited 
+  total_customers_in_company: { type: Number, required: true }, // -1 unlimited 
+  total_sms: { type: Number, required: true },// -1 unlimited 
+  total_email: { type: Number, required: true } // -1 unlimited 
+
 });
 module.exports = mongoose.model('PayReminderPlan', PayReminderPlanSchema);

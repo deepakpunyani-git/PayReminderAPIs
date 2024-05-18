@@ -19,7 +19,19 @@ const PayReminderUserSchema = new Schema({
   dateCreated: { type: Date, default: Date.now },
   dateUpdated: Date, 
   createdBy: { type: Schema.Types.ObjectId, ref: 'PayReminderUser' },
-  updatedBy: { type: Schema.Types.ObjectId, ref: 'PayReminderUser' }
+  updatedBy: { type: Schema.Types.ObjectId, ref: 'PayReminderUser' },
+  plan_id: { type: Schema.Types.ObjectId, ref: 'PayReminderPlan' },
+  planStartDate: { type: Date },
+  planEndDate: { type: Date },
+  plan_status: { type: String, enum: ['Active', 'Expired', 'Canceled']},
+  plan_type: { type: String, enum: ['Free', 'Paid']},
+  trail_taken: { type: Boolean, default: false },
+  total_companies: { type: Number, required: true }, // -1 unlimited 
+  total_customers_in_company: { type: Number, required: true }, // -1 unlimited 
+  total_sms: { type: Number, required: true },// -1 unlimited 
+  total_email: { type: Number, required: true }, // -1 unlimited 
+  trailStartDate: { type: Date },
+  trailEndDate: { type: Date },
 });
 
 PayReminderUserSchema.methods.comparePassword = async function (candidatePassword) {

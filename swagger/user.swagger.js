@@ -29,8 +29,6 @@
  *     summary: Update user profile
  *     tags: [Users]
  *     description: Update user profile details
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -81,8 +79,6 @@
  *     summary: Change user email
  *     tags: [Users]
  *     description: Change user email address
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -120,8 +116,6 @@
  *     summary: Change user password
  *     tags: [Users]
  *     description: Change user password
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -162,8 +156,6 @@
  *     summary: Get user profile details
  *     tags: [Users]
  *     description: Get user profile details
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: User profile details retrieved successfully

@@ -12,8 +12,6 @@
  *     summary: List clients
  *     tags: [Clients]
  *     description: Retrieve a list of clients
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: page

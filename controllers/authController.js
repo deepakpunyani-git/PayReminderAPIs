@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
-const { generateToken , generateOTP } = require('../helpers');
+const { generateToken , generateOTP , regUserData } = require('../helpers');
 const { validationResult } = require('express-validator');
 const dotenv = require('dotenv');
 dotenv.config();
