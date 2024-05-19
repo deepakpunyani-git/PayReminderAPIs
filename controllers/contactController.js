@@ -75,6 +75,12 @@ exports.listMessages = async (req, res) => {
     const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1;
     const sort = { [sortField]: sortOrder };
 
+    // Fetch total count for pagination
+    const totalCount = await PayReminderContactus.countDocuments(filter);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCount / limit);
+
     // Fetch messages based on filters, sort, and pagination
     const messages = await PayReminderContactus.find(filter)
       .sort(sort)
@@ -82,8 +88,15 @@ exports.listMessages = async (req, res) => {
       .limit(limit)
       .lean()
       .populate('send_by', 'name email'); 
-      
-    res.json(messages);
+
+    // Prepare response
+    const response = {
+      totalPages,
+      currentPage: page,
+      messages
+    };
+
+    res.json(response);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });

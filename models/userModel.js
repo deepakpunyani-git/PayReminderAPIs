@@ -8,7 +8,7 @@ const PayReminderUserSchema = new Schema({
   gender: { type: String, enum: ['male', 'female', 'other'] },
   profile_pic: { type: String } ,
   username: String,
-  email: { type: String, required: true },
+  email: { type: String},
   email_otp: { type: Number},
   email_otp_dateCreated: { type: Date},
   email_otp_expiresAt: { type: Date},
@@ -26,10 +26,10 @@ const PayReminderUserSchema = new Schema({
   plan_status: { type: String, enum: ['Active', 'Expired', 'Canceled']},
   plan_type: { type: String, enum: ['Free', 'Paid']},
   trail_taken: { type: Boolean, default: false },
-  customize_content: { type: Boolean, required: true, default: true },
-  total_customers: { type: Number, required: true }, // -1 unlimited 
-  total_sms: { type: Number, required: true },// -1 unlimited 
-  total_email: { type: Number, required: true }, // -1 unlimited 
+  customize_content: { type: Boolean},
+  total_customers: { type: Number}, // -1 unlimited 
+  total_sms: { type: Number},// -1 unlimited 
+  total_email: { type: Number }, // -1 unlimited 
   trailStartDate: { type: Date },
   trailEndDate: { type: Date },
 });

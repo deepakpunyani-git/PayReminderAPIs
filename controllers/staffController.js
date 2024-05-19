@@ -20,8 +20,9 @@ exports.addStaff = async (req, res) => {
       if (existingStaff) {
         return res.status(400).json({ message: 'Username already exists' });
       }
-  
-      const staff = new Staff({ name, username, password });
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      const staff = new Staff({ name, username, password:hashedPassword , createdBy:req.user._id });
       await staff.save();
       res.status(201).send(staff);
     } catch (error) {
@@ -88,6 +89,7 @@ exports.getStaffList = async (req, res) => {
       }
   
       const staffList = await Staff.find()
+        .select('-password')
         .populate('createdBy', 'name')
         .populate('updatedBy', 'name')
         .sort(sortOption);
