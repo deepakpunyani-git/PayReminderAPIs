@@ -10,8 +10,8 @@ const PayReminderPlanSchema = new Schema({
   dateCreated: { type: Date, default: Date.now },
   updatedBy: { type: Schema.Types.ObjectId, ref: 'PayReminderUser' },
   dateUpdated: { type: Date },
-  total_companies: { type: Number, required: true }, // -1 unlimited 
-  total_customers_in_company: { type: Number, required: true }, // -1 unlimited 
+  customize_content: { type: Boolean, required: true, default: true },
+  total_customers: { type: Number, required: true }, // -1 unlimited 
   total_sms: { type: Number, required: true },// -1 unlimited 
   total_email: { type: Number, required: true } // -1 unlimited 
 

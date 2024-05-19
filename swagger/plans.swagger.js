@@ -28,9 +28,9 @@
  *                 type: number
  *               monthlyPrice:
  *                 type: number
- *               total_companies:
- *                 type: number
- *               total_customers_in_company:
+ *               customize_content:
+ *                 type: boolean
+ *               total_customers:
  *                 type: number
  *               total_sms:
  *                 type: number
@@ -104,7 +104,6 @@
  *         description: Internal server error
  */
 
-
 /**
  * @swagger
  * /plans:
@@ -133,6 +132,62 @@
 
 /**
  * @swagger
+ * /plans/{id}:
+ *   get:
+ *     summary: Retrieve a single PayReminder plan
+ *     description: Fetch details of a single PayReminder plan by ID.
+ *     tags: [Plans]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the plan
+ *     responses:
+ *       '200':
+ *         description: A single PayReminder plan
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Customized message based on the plan and user type
+ *                 plan:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       description: The plan ID
+ *                     name:
+ *                       type: string
+ *                       description: The plan name
+ *                     features:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       description: The features of the plan
+ *                     yearlyPrice:
+ *                       type: number
+ *                       description: The yearly price of the plan
+ *                     monthlyPrice:
+ *                       type: number
+ *                       description: The monthly price of the plan
+ *                     customize_content:
+ *                       type: boolean
+ *                       description: Indicates if the plan includes customized content features
+ *       '400':
+ *         description: Bad request
+ *       '401':
+ *         description: Unauthorized
+ *       '404':
+ *         description: Plan not found
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     PayReminderPlan:
@@ -148,12 +203,13 @@
  *           type: number
  *         monthlyPrice:
  *           type: number
- *         total_companies:
- *           type: number
- *         total_customers_in_company:
+ *         customize_content:
+ *           type: boolean
+ *         total_customers:
  *           type: number
  *         total_sms:
  *           type: number
  *         total_email:
  *           type: number
  */
+

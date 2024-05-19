@@ -12,7 +12,7 @@ exports.addPayReminderPlan = async (req, res) => {
 
 
   try {
-    const { name, features, yearlyPrice, monthlyPrice , total_companies , total_customers_in_company,total_sms,total_email  } = req.body;
+    const { name, features, yearlyPrice, monthlyPrice , total_customers , customize_content,total_sms,total_email  } = req.body;
 
     // Check if the plan name is already taken
     const existingPlan = await PayReminderPlan.findOne({ name });
@@ -20,7 +20,7 @@ exports.addPayReminderPlan = async (req, res) => {
       return res.status(400).json({ message: 'Plan name already exists' });
     }
 
-    const plan = new PayReminderPlan({ name, features, yearlyPrice, monthlyPrice , total_companies , total_customers_in_company,total_sms,total_email,createdBy:req.user._id });
+    const plan = new PayReminderPlan({ name, features, yearlyPrice, monthlyPrice , customize_content , total_customers,total_sms,total_email,createdBy:req.user._id });
     await plan.save();
     res.status(201).json(plan);
   } catch (error) {
@@ -38,15 +38,15 @@ exports.updatePayReminderPlan = async (req, res) => {
 
   try {
     const { id } = req.params;
-    const { name, features, yearlyPrice, monthlyPrice , total_companies , total_customers_in_company,total_sms,total_email  } = req.body;
+    const { name, features, yearlyPrice, monthlyPrice , total_customers , customize_content,total_sms,total_email  } = req.body;
+    
+    const existingPlan = await PayReminderPlan.findOne({ name, _id: { $ne: id } });
 
-    // Check if the plan name is already taken by another plan
-    const existingPlan = await Plan.findOne({ name, _id: { $ne: id } });
     if (existingPlan) {
       return res.status(400).json({ message: 'Plan name already exists' });
     }
 
-    const updatedPlan = await Plan.findByIdAndUpdate(id, { name, features, yearlyPrice, monthlyPrice, total_companies , total_customers_in_company,total_sms,total_email }, { new: true });
+    const updatedPlan = await PayReminderPlan.findByIdAndUpdate(id, { name, features, yearlyPrice, monthlyPrice, total_customers , customize_content,total_sms,total_email,updatedBy:req.user._id,dateUpdated:new Date() }, { new: true });
     if (!updatedPlan) {
       return res.status(404).json({ message: 'Plan not found' });
     }
@@ -54,6 +54,7 @@ exports.updatePayReminderPlan = async (req, res) => {
     res.json(updatedPlan);
   } catch (error) {
     res.status(400).send(error);
+
   }
 };
 
@@ -101,6 +102,41 @@ exports.listPayReminderPlans = async (req, res) => {
 
     const payReminderPlans = await query.exec();
     res.json(payReminderPlans);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+exports.viewPayReminderPlan = async (req, res) => {
+  try {
+    const planId = req.params.id;
+    let query = PayReminderPlan.findById(planId);
+
+    const token = req.headers.authorization?.split(' ')[1];
+    var userType;
+    if (token) {
+      jwt.verify(token, secretKey, (err, decoded) => {
+        userType = decoded?.usertype;
+      });
+    }
+
+    if (userType) {
+      if (userType !== 'admin' && userType !== 'staff') {
+        query = query.select('name features yearlyPrice monthlyPrice');
+      } else {
+        query = query.populate('createdBy', 'username').populate('updatedBy', 'username');
+      }
+    } else {
+      query = query.select('name features yearlyPrice monthlyPrice');
+    }
+
+    const payReminderPlan = await query.exec();
+    if (!payReminderPlan) {
+      return res.status(404).json({ error: 'Plan not found' });
+    }
+
+    res.json(payReminderPlan);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

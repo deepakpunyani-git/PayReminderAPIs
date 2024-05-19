@@ -26,10 +26,10 @@ const PayReminderUserSchema = new Schema({
   plan_status: { type: String, enum: ['Active', 'Expired', 'Canceled']},
   plan_type: { type: String, enum: ['Free', 'Paid']},
   trail_taken: { type: Boolean, default: false },
-  total_companies: { type: Number }, // -1 unlimited 
-  total_customers_in_company: { type: Number }, // -1 unlimited 
-  total_sms: { type: Number },// -1 unlimited 
-  total_email: { type: Number }, // -1 unlimited 
+  customize_content: { type: Boolean, required: true, default: true },
+  total_customers: { type: Number, required: true }, // -1 unlimited 
+  total_sms: { type: Number, required: true },// -1 unlimited 
+  total_email: { type: Number, required: true }, // -1 unlimited 
   trailStartDate: { type: Date },
   trailEndDate: { type: Date },
 });

@@ -21,17 +21,17 @@ const regUserData = () => {
   oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
 
   const plan = {
-    total_email: 50,
-    total_sms: 50,
-    total_customers_in_company: 100,
-    total_companies: 1,
-    trial_taken: true,
+    total_email: process.env.TOTAL_EMAIL,
+    total_sms: process.env.TOTAL_SMS,
+    total_customers: process.env.TOTAL_CUSTOMERS_IN_COMPANY,
+    customize_content: process.env.customize_content,
+    trial_taken: process.env.TRIAL_TAKEN,
     plan_type: 'Free',
     plan_status: 'Active',
     trialStartDate: new Date(),
     trialEndDate: oneMonthFromNow
   };
-  return plan;
+  return plan; 
 };
 
 

@@ -17,4 +17,6 @@ router.delete('/plan/:id', verifyToken, checkUserType(['admin']), payReminderPla
 // List all PayReminderPlans
 router.get('/plans', payReminderPlanController.listPayReminderPlans);
 
+router.get('/plans/:id', payReminderPlanController.viewPayReminderPlan);
+
 module.exports = router;

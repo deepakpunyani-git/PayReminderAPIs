@@ -57,8 +57,17 @@ exports.listMessages = async (req, res) => {
     if (status) filter.status = status;
     if (fromDate || toDate) {
       filter.datecreated = {};
-      if (fromDate) filter.datecreated.$gte = new Date(fromDate);
-      if (toDate) filter.datecreated.$lte = new Date(toDate);
+      if (fromDate && toDate) {
+        // If both fromDate and toDate are provided
+        filter.datecreated.$gte = new Date(fromDate);
+        filter.datecreated.$lte = new Date(toDate);
+      } else if (fromDate) {
+        // If only fromDate is provided
+        filter.datecreated.$gte = new Date(fromDate);
+      } else {
+        // If only toDate is provided
+        filter.datecreated.$lte = new Date(toDate);
+      }
     }
 
     // Sorting parameter
@@ -71,7 +80,8 @@ exports.listMessages = async (req, res) => {
       .sort(sort)
       .skip(skipIndex)
       .limit(limit)
-      .lean(); 
+      .lean()
+      .populate('send_by', 'name email'); 
       
     res.json(messages);
   } catch (error) {
@@ -87,17 +97,17 @@ exports.changeStatus = async (req, res) => {
   }
 
   try {
-    const { messageId, status } = req.body;
+    const { messageId } = req.params;
+    const { status } = req.body;
 
-    if (status === 'read') {
       const message = await PayReminderContactus.findById(messageId);
       if (!message) {
         return res.status(404).json({ message: 'Message not found' });
       }
-      if (message.status === 'read') {
-        return res.status(400).json({ message: 'Message status is already "read"' });
+      if (message.status === status) {
+        return res.status(400).json({ message: `Message status is already "${status}"` });
       }
-    }
+    
 
     // Update message status
     await PayReminderContactus.findByIdAndUpdate(messageId, { status, status_chanaced_by: req.user.id, status_chnaged_date: Date.now() });
