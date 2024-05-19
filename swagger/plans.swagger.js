@@ -148,4 +148,12 @@
  *           type: number
  *         monthlyPrice:
  *           type: number
+ *         total_companies:
+ *           type: number
+ *         total_customers_in_company:
+ *           type: number
+ *         total_sms:
+ *           type: number
+ *         total_email:
+ *           type: number
  */

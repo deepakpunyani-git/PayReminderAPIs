@@ -1,5 +1,8 @@
 const PayReminderPlan = require('../models/planModel');
 const { validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const secretKey = process.env.JWT_SECRET;
 
 exports.addPayReminderPlan = async (req, res) => {
   const errors = validationResult(req);
@@ -9,7 +12,7 @@ exports.addPayReminderPlan = async (req, res) => {
 
 
   try {
-    const { name, features, yearlyPrice, monthlyPrice , total_companies , total_customers_in_company,total_sms,total_email } = req.body;
+    const { name, features, yearlyPrice, monthlyPrice , total_companies , total_customers_in_company,total_sms,total_email  } = req.body;
 
     // Check if the plan name is already taken
     const existingPlan = await PayReminderPlan.findOne({ name });
@@ -17,7 +20,7 @@ exports.addPayReminderPlan = async (req, res) => {
       return res.status(400).json({ message: 'Plan name already exists' });
     }
 
-    const plan = new PayReminderPlan({ name, features, yearlyPrice, monthlyPrice , total_companies , total_customers_in_company,total_sms,total_email });
+    const plan = new PayReminderPlan({ name, features, yearlyPrice, monthlyPrice , total_companies , total_customers_in_company,total_sms,total_email,createdBy:req.user._id });
     await plan.save();
     res.status(201).json(plan);
   } catch (error) {
@@ -35,7 +38,7 @@ exports.updatePayReminderPlan = async (req, res) => {
 
   try {
     const { id } = req.params;
-    const { name, features, yearlyPrice, monthlyPrice } = req.body;
+    const { name, features, yearlyPrice, monthlyPrice , total_companies , total_customers_in_company,total_sms,total_email  } = req.body;
 
     // Check if the plan name is already taken by another plan
     const existingPlan = await Plan.findOne({ name, _id: { $ne: id } });
@@ -69,37 +72,22 @@ exports.deletePayReminderPlan = async (req, res) => {
 };
 
 // List all PayReminderPlans
-exports.listPayReminderPlans = async (req, res) => {
-  try {
-    let query = PayReminderPlan.find();
-
-    if (req.user && req.user.userType) {
-
-      let userType = req.user.userType; 
-
-    }else{
-      let userType = ""; 
-
-    }
-
-    if (userType !== 'admin' && userType !== 'staff') {
-      query = query.select('-name -features -yearlyPrice -monthlyPrice');
-    } else {
-      query = query.populate('createdBy', 'username').populate('updatedBy', 'username');
-    }
-
-    const payReminderPlans = await query.exec();
-    res.json(payReminderPlans);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
 
 exports.listPayReminderPlans = async (req, res) => {
   try {
     let query = PayReminderPlan.find();
-    if (req.user && req.user.userType) {
-      const userType = req.user.userType;
+    const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+    
+    const token = req.headers.authorization?.split(' ')[1];
+    var userType;
+    if (token) {
+      jwt.verify(token, secretKey, (err, decoded) => {
+        userType = decoded?.usertype;
+      });
+    }
+
+
+    if (userType) {
       if (userType !== 'admin' && userType !== 'staff') {
         query = query.select('name features yearlyPrice monthlyPrice');
       } else {
@@ -109,6 +97,7 @@ exports.listPayReminderPlans = async (req, res) => {
       query = query.select('name features yearlyPrice monthlyPrice');
 
     }
+    query = query.sort({ name: sortOrder });
 
     const payReminderPlans = await query.exec();
     res.json(payReminderPlans);

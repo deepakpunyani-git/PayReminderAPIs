@@ -50,3 +50,17 @@
  *       500:
  *         description: Internal server error
  */
+
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Client:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The name of the Client
+ */

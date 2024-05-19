@@ -18,7 +18,6 @@ exports.addMessage = async (req, res) => {
     if (token) {
       jwt.verify(token, secretKey, (err, decoded) => {
           userId = decoded?._id;
-          console.log(userId);
       });
     }
     const isLimitReached = await checkMessageLimit(email);

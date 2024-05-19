@@ -86,6 +86,13 @@
  *   put:
  *     summary: Change message status
  *     tags: [Contact Us]
+  *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the update status
  *     requestBody:
  *       required: true
  *       content:

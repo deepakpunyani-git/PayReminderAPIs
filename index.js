@@ -7,7 +7,7 @@ const session = require('express-session');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./models/userModel');
-const { generateToken } = require('./helpers');
+const { generateToken , regUserData } = require('./helpers');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
@@ -48,11 +48,25 @@ passport.use(new GoogleStrategy({
           email: profile.emails[0].value,
           googleId: profile.id,
         });
+
+
         await user.save();
       } else {
         user.googleId = profile.id;
         await user.save();
       }
+
+      if(user.trail_taken!=true){
+        var dataTrail = regUserData()
+        user = {...user, ...dataTrail}
+      }
+      user.email_otp = undefined;
+      user.email_otp_expiresAt = undefined;
+      user.email_otp_dateCreated = undefined;
+      user.status = "active";
+      await user.save();
+
+
       return cb(null, user);
     } catch (error) {
       return cb(error);

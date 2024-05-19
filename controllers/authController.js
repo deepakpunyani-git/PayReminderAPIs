@@ -210,6 +210,12 @@ exports.verifyOtp = async (req, res) => {
     user.email_otp_dateCreated = undefined;
     user.status = "active";
 
+    if(user.trail_taken!=true){
+      var dataTrail = regUserData()
+      user = {...user, ...dataTrail}
+    }
+
+
     await user.save();
 
     res.status(200).json({ message: 'OTP verified successfully' });

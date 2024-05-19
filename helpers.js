@@ -16,9 +16,23 @@ const generateOTP = () => {
 };
 
 
-const regNewUserData = () => {
-  return {total_email:50,total_sms:50,total_customers_in_company:100,total_companies:1,trail_taken:true,plan_type:'Free',plan_status:'Active'};
+const regUserData = () => {
+  const oneMonthFromNow = new Date();
+  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+
+  const plan = {
+    total_email: 50,
+    total_sms: 50,
+    total_customers_in_company: 100,
+    total_companies: 1,
+    trial_taken: true,
+    plan_type: 'Free',
+    plan_status: 'Active',
+    trialStartDate: new Date(),
+    trialEndDate: oneMonthFromNow
+  };
+  return plan;
 };
 
 
-module.exports = { generateToken ,  generateOTP};
+module.exports = { generateToken ,  generateOTP , regUserData};
