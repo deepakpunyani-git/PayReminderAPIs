@@ -25,7 +25,6 @@ const regUserData = () => {
     total_sms: process.env.TOTAL_SMS,
     total_customers: process.env.TOTAL_CUSTOMERS_IN_COMPANY,
     customize_content: process.env.customize_content,
-    trial_taken: process.env.TRIAL_TAKEN,
     plan_type: 'Free',
     plan_status: 'Active',
     trialStartDate: new Date(),

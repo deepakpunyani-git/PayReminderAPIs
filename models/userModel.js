@@ -32,6 +32,7 @@ const PayReminderUserSchema = new Schema({
   total_email: { type: Number }, // -1 unlimited 
   trailStartDate: { type: Date },
   trailEndDate: { type: Date },
+  block_user: { type: Boolean, default: false },
 });
 
 PayReminderUserSchema.methods.comparePassword = async function (candidatePassword) {

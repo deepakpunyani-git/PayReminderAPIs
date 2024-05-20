@@ -15,6 +15,9 @@ exports.listClients = async (req, res) => {
     const sortOption = { name: sortOrder === 'asc' ? 1 : -1 };
 
     const clients = await Client.find(query)
+      .select('-password')
+      .populate('createdBy', 'name')
+      .populate('updatedBy', 'name')
       .sort(sortOption)
       .limit(limit * 1)
       .skip((page - 1) * limit)

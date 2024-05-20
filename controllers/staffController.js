@@ -22,7 +22,7 @@ exports.addStaff = async (req, res) => {
       }
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      const staff = new Staff({ name, username, password:hashedPassword , createdBy:req.user._id });
+      const staff = new Staff({ name, username, password:hashedPassword , createdBy:req.user._id,usertype:'staff' });
       await staff.save();
       res.status(201).send(staff);
     } catch (error) {

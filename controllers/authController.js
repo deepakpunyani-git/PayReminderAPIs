@@ -89,6 +89,10 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Your account is not active' });
     }
 
+    if (user.block_user === true) {
+      return res.status(401).json({ message: 'Your account is blocked' });
+    }
+
     const token = generateToken(user);
 
     res.json({ token });
@@ -191,7 +195,7 @@ exports.verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -210,9 +214,10 @@ exports.verifyOtp = async (req, res) => {
     user.email_otp_dateCreated = undefined;
     user.status = "active";
 
-    if(user.trail_taken!=true){
-      var dataTrail = regUserData()
-      user = {...user, ...dataTrail}
+    if (user.trail_taken != true) {
+      const dataTrail = regUserData();
+      Object.assign(user, dataTrail);
+      user.trail_taken = true
     }
 
 

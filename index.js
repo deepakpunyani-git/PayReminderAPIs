@@ -10,6 +10,7 @@ const User = require('./models/userModel');
 const { generateToken , regUserData } = require('./helpers');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
+const path = require('path');
 
 // Load environment variables
 dotenv.config();
@@ -30,6 +31,8 @@ app.use(cors({ origin: CLIENT_URL }));
 app.use(session({ secret: JWT_SECRET, resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use(routes);
 
 
@@ -56,10 +59,12 @@ passport.use(new GoogleStrategy({
         await user.save();
       }
 
-      if(user.trail_taken!=true){
-        var dataTrail = regUserData()
-        user = {...user, ...dataTrail}
+      if (user.trail_taken != true) {
+        const dataTrail = regUserData();
+        Object.assign(user, dataTrail);
+        user.trail_taken = true
       }
+      
       user.email_otp = undefined;
       user.email_otp_expiresAt = undefined;
       user.email_otp_dateCreated = undefined;
@@ -148,7 +153,20 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 );
 
 
+// Middleware to check user status and block status
+app.use((req, res, next) => {
+  if (req.isAuthenticated()) {
+    const user = req.user;
+    if (user.status !== 'active') {
+      return res.status(500).send('Your account is not active');
+    }
 
+    if (user.block_user === true) {
+      return res.status(500).send('Your account is blocked');
+    }
+  }
+  next();
+});
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
