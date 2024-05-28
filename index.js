@@ -132,6 +132,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.get("/", (req, res) => {
+
   res.send('Demo APIs - Pay Reminder. <a href="/api-docs/">Test APIs here</a>.');
 
 });
@@ -182,6 +183,8 @@ connectDB()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
+      require('./reminderDetailScheduler');
+
     });
   })
   .catch((err) => {

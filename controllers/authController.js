@@ -7,7 +7,6 @@ dotenv.config();
 const saltRounds = parseInt(process.env.saltRounds);
 const nodemailer = require("nodemailer");
 
-
 exports.registerUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -19,7 +18,7 @@ exports.registerUser = async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ message: 'User with this email already exists' });
+     return res.status(400).json({ message: 'User with this email already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -42,6 +41,8 @@ exports.registerUser = async (req, res) => {
       },
     });
 
+    await user.save();
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -53,7 +54,7 @@ exports.registerUser = async (req, res) => {
       if (error) {
         console.error('Error sending email:', error);
       } else {
-        console.log('Email sent:', info.response);
+        //console.log('Email sent:', info.response);
       }
     });
 
