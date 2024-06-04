@@ -63,18 +63,30 @@ Start the server in development mode (with nodemon):
 API Documentation
     The API documentation is available at [Swagger UI](https://payreminder.onrender.com/api-docs).
 
-Environment Variables
+Environment Variables:
+
     PORT
+    
     MONGODB_URI
+    
     saltRounds
+    
     JWT_SECRET 
+    
     email
+    
     EMAIL_HOST
+    
     EMAIL_PORT
+    
     EMAIL_USER
+    
     EMAIL_PASSWORD
+    
     GOOGLE_CLIENT_ID
+    
     GOOGLE_CLIENT_SECRET
+    
     CLIENT_URL
 
 Scripts
@@ -82,25 +94,42 @@ Scripts
     npm run dev: Starts the server in development mode with nodemon.
 
 
-Dependencies
+Dependencies:
+
     bcrypt: ^5.1.1
+    
     cors: ^2.8.5
-    cros: ^1.0.1
+        
     dotenv: ^16.4.5
+    
     express: ^4.19.2
+    
     express-session: ^1.18.0
+    
     express-validator: ^7.0.1
+    
     jsonwebtoken: ^9.0.2
+    
     moment: ^2.30.1
+    
     mongoose: ^8.4.0
+    
     morgan: ^1.10.0
+    
     multer: ^1.4.5-lts.1
+    
     node-schedule: ^2.1.1
+    
     nodemailer: ^6.9.13
+    
     passport: ^0.7.0
+    
     passport-google-oauth20: ^2.0.0
+    
     passport-jwt: ^4.0.1
+    
     swagger-jsdoc: ^6.2.8
+    
     swagger-ui-express: ^5.0.0
 
 Contributing
