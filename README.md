@@ -1,6 +1,32 @@
 PayReminderAPIs
 PayReminderAPIs is a Node.js application designed to help users manage payment reminders efficiently. This repository includes a RESTful API built using Express.js, and it utilizes various dependencies for handling authentication, scheduling, and documentation.
 
+Features
+
+    Authentication
+        User registration and login functionality.
+        Password hashing and verification using bcrypt.
+        JWT-based authentication for secure API access.
+        OAuth 2.0 authentication using Google with Passport.js.
+    Authorization
+        Role-based access control for different user types (staff, clients).
+        Secure session management with express-session.
+    User Management
+        CRUD operations for user profiles.
+        Password reset functionality.
+        Email notifications using Nodemailer.
+    Client and Staff Management
+        CRUD operations for managing clients and staff members.
+        Detailed views for individual client and staff profiles.
+    Payment Reminders
+        Automated payment reminders using node-schedule.
+        Integration with email service to send reminders.
+    Contact Management
+        Contact form handling.
+        Storing and managing contact inquiries.
+
+
+
 Table of Contents
 Installation
 Usage
